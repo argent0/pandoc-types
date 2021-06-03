@@ -171,6 +171,7 @@ module Text.Pandoc.Builder ( module Text.Pandoc.Definition
                            , simpleCaption
                            , emptyCaption
                            , divWith
+                           , simpleFigure
                            -- * Table processing
                            , normalizeTableHead
                            , normalizeTableBody
@@ -568,6 +569,9 @@ emptyCaption = simpleCaption mempty
 
 divWith :: Attr -> Blocks -> Blocks
 divWith attr = singleton . Div attr . toList
+
+simpleFigure :: Attr -> Caption -> Target -> Blocks
+simpleFigure attr figCaption url = singleton $ Graphic attr figCaption url
 
 -- | Normalize the 'TableHead' with 'clipRows' and 'placeRowSection'
 -- so that when placed on a grid with the given width and a height
