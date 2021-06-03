@@ -301,6 +301,8 @@ data Block
     | Table Attr Caption [ColSpec] TableHead [TableBody] TableFoot
     -- | Generic block container with attributes
     | Div Attr [Block]
+    -- | A Graphic is Figure that should not be included in a table of figures
+    | Graphic Attr Caption Target
     -- | Nothing
     | Null
     deriving (Eq, Ord, Read, Show, Typeable, Data, Generic)

@@ -22,6 +22,7 @@ import Data.ByteString.Lazy (ByteString)
 import qualified Data.Monoid as Monoid
 
 
+
 p_walk :: (Typeable a, Walkable a Pandoc)
        => (a -> a) -> Pandoc -> Bool
 p_walk f d = everywhere (mkT f) d == walk f d
@@ -441,6 +442,14 @@ t_div = ( Div ("id", ["kls"], [("k1", "v1"), ("k2", "v2")]) [Para [Str "Hello"]]
          , [s|{"t":"Div","c":[["id",["kls"],[["k1","v1"],["k2","v2"]]],[{"t":"Para","c":[{"t":"Str","c":"Hello"}]}]]}|]
          )
 
+t_graphic :: (Block, ByteString)
+t_graphic =
+  ( Graphic
+    ("id", ["kls"], [("k1", "v1"), ("k2", "v2")])
+    (Caption (Just [Str "Short", Space, Str "caption"]) [Para [Str "Caption"]])
+    ("my_img.png", "image")
+  , [s|{"t":"Graphic","c":[["id",["kls"],[["k1","v1"],["k2","v2"]]],[[{"t":"Str","c":"Short"},{"t":"Space"},{"t":"Str","c":"caption"}],[{"t":"Para","c":[{"t":"Str","c":"Caption"}]}]],["my_img.png","image"]]}|])
+
 t_null :: (Block, ByteString)
 t_null = (Null, [s|{"t":"Null"}|])
 
@@ -716,6 +725,7 @@ tests =
         , testEncodeDecode "Header" t_header
         , testEncodeDecode "Table" t_table
         , testEncodeDecode "Div" t_div
+        , testEncodeDecode "Graphic" t_graphic
         , testEncodeDecode "Null" t_null
         ]
       , testGroup "Table"
@@ -749,4 +759,3 @@ tests =
 
 main :: IO ()
 main = defaultMain tests
-
