@@ -87,6 +87,7 @@ instance Arbitrary Blocks where
                                                    concatMap flattenTableBody bd <>
                                                    flattenTableFoot ft
           flattenBlock (Div _ blks) = blks
+          flattenBlock (Graphic _ capt _) = flattenCaption capt
           flattenBlock Null = []
 
           flattenCaption (Caption Nothing body)    = body
@@ -204,6 +205,7 @@ instance Arbitrary Block where
     [Table attr capt specs thead tbody' tfoot | tbody' <- shrink tbody] ++
     [Table attr capt specs thead tbody tfoot' | tfoot' <- shrink tfoot] ++
     [Table attr capt' specs thead tbody tfoot | capt' <- shrink capt]
+  shrink (Graphic attr graphicCaption target) = Graphic attr <$> shrink graphicCaption <*> pure target
   shrink (Div attr blks) = (Div attr <$> shrinkBlockList blks)
                         ++ (flip Div blks <$> shrinkAttr attr)
   shrink Null = []

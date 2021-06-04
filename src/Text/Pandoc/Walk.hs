@@ -461,6 +461,7 @@ walkBlockM f (OrderedList a cs)       = OrderedList a <$> walkM f cs
 walkBlockM f (BulletList cs)          = BulletList <$> walkM f cs
 walkBlockM f (DefinitionList xs)      = DefinitionList <$> walkM f xs
 walkBlockM f (Header lev attr xs)     = Header lev attr <$> walkM f xs
+walkBlockM f (Graphic attr graphicCaption target) = Graphic attr <$> walkM f graphicCaption <*> pure target
 walkBlockM f (Div attr bs')           = Div attr <$> walkM f bs'
 walkBlockM _ x@CodeBlock {}           = return x
 walkBlockM _ x@RawBlock {}            = return x
@@ -495,6 +496,7 @@ queryBlock f (Table _ capt _ hs bs fs)
     query f hs <>
     query f bs <>
     query f fs
+queryBlock f (Graphic _ graphicCaption _) = query f graphicCaption
 queryBlock f (Div _ bs)               = query f bs
 queryBlock _ Null                     = mempty
 
